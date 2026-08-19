@@ -1,26 +1,27 @@
 """
 Moduł zabezpieczenia aplikacji hasłem (Authentication & Access Control).
-Obsługuje hasło z Streamlit Secrets oraz domyślne hasło awaryjne.
+Hasło pobierane jest wyłącznie w bezpieczny sposób ze Streamlit Secrets (APP_PASSWORD).
+W kodzie nie ma żadnych haseł domyślnych ani fallbacków.
 """
 
 import streamlit as st
 
-DEFAULT_PASSWORD = "scouting2026"
-
 def check_password() -> bool:
     """
     Sprawdza, czy użytkownik jest zalogowany.
-    Jeśli nie, wyświetla elegancki formularz logowania i zatrzymuje dalsze renderowanie.
+    Weryfikuje hasło wprowadzone przez użytkownika względem st.secrets["APP_PASSWORD"].
+    Jeśli nie jest zalogowany, wyświetla formularz i zatrzymuje aplikację.
     """
     # 1. Sprawdź czy użytkownik jest już uwierzytelniony w sesji
     if st.session_state.get("authenticated", False):
         return True
 
-    # 2. Pobierz poprawne hasło (ze Streamlit Secrets lub hasło domyślne)
+    # 2. Pobierz hasło wyłącznie ze Streamlit Secrets
     try:
-        correct_password = st.secrets.get("APP_PASSWORD", DEFAULT_PASSWORD)
-    except Exception:
-        correct_password = DEFAULT_PASSWORD
+        correct_password = st.secrets["APP_PASSWORD"]
+    except (KeyError, FileNotFoundError, AttributeError):
+        st.error("⚠️ Błąd konfiguracji bezpieczeństwa: brak zdefiniowanego klucza `APP_PASSWORD` w Streamlit Secrets. Skonfiguruj hasło w panelu Streamlit Cloud (Settings -> Secrets).")
+        return False
 
     def verify_password():
         user_pass = st.session_state.get("login_password_input", "")
@@ -63,7 +64,7 @@ def check_password() -> bool:
 
     st.markdown("""
     <div style="text-align: center; margin-top: 32px; color: #94A3B8; font-size: 12px;">
-        Football Analytics & Comparison Studio • Wszelkie prawa zastrzeżone
+        Football Analytics & Comparison Studio • Dostęp chroniony
     </div>
     """, unsafe_allow_html=True)
 
