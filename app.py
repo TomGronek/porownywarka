@@ -13,6 +13,7 @@ from src.data_loader import load_all_datasets, filter_players_df, get_unique_pla
 from src.table_renderer import generate_comparison_table_html
 from src.image_generator import generate_table_png_bytes
 from src.components import inject_custom_css, render_metric_selector
+from src.auth import check_password, render_auth_sidebar
 
 # Konfiguracja strony Streamlit
 st.set_page_config(
@@ -23,6 +24,13 @@ st.set_page_config(
 )
 
 inject_custom_css()
+
+# Weryfikacja hasła dostępu
+if not check_password():
+    st.stop()
+
+# Pasek boczny ze statusem i wylogowaniem
+render_auth_sidebar()
 
 # Wczytanie bazy danych
 master_df = load_all_datasets()
