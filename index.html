@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiza Porównawcza Statystyk — Pozycja 10</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #111827;
+            padding: 32px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+        .card-header {
+            background-color: #1E293B;
+            color: #FFFFFF;
+            padding: 24px 28px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .card-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            margin-top: 6px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+        .data-table th {
+            background-color: #0F172A;
+            color: #FFFFFF;
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border: none;
+        }
+        .data-table th:not(:first-child), .data-table td:not(:first-child) {
+            text-align: center;
+        }
+        .category-row td {
+            background-color: #F1F5F9;
+            color: #334155;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            padding: 10px 18px;
+            border-top: 1px solid #CBD5E1;
+            border-bottom: 1px solid #CBD5E1;
+            text-align: left !important;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+        .data-table td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #E2E8F0;
+            border-left: none;
+            border-right: none;
+        }
+        .metric-name {
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .benchmark-col {
+            background-color: #FEF08A !important;
+            color: #713F12;
+            font-weight: 700;
+        }
+        .badge-top1 {
+            background-color: #BBF7D0;
+            color: #15803D;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            border: none;
+        }
+        .preview-section {
+            margin-top: 24px;
+            text-align: center;
+        }
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #CBD5E1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .meta-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            flex: 1;
+        }
+        .meta-card strong {
+            display: block;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">ANALIZA PORÓWNAWCZA STATYSTYK — POZYCJA 10</h1>
+                <div class="card-subtitle">Jakub Kucharski vs Aleksander Wołczek vs Patryk Kusztal na tle średnich 1. i 2. ligi</div>
+            </div>
+            
+            <div style="padding: 24px;">
+                <div class="meta-info">
+                    <div class="meta-card">
+                        <strong>J. Kucharski (Stal Rzeszów)</strong>
+                        1 Liga | Wiek: 17 (ur. 2008) | 689 min
+                    </div>
+                    <div class="meta-card">
+                        <strong>A. Wołczek (Sandecja Nowy Sącz)</strong>
+                        2 Liga | Wiek: 21 | 2671 min
+                    </div>
+                    <div class="meta-card">
+                        <strong>P. Kusztal (Warta Poznań)</strong>
+                        2 Liga | Wiek: 23 | 952 min
+                    </div>
+                    <div class="meta-card">
+                        <strong>Średnie Odniesienia (Żółte Kolumny)</strong>
+                        1 Liga Poz. 10 (210 piłk.) | 1+2 Liga ur. 2008+ (15 piłk.)
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Metryka Statystyczna</th>
+                                <th>Jakub Kucharski</th>
+                                <th>Aleksander Wołczek</th>
+                                <th>Patryk Kusztal</th>
+                                <th style="background-color: #EAB308; color: #FFFFFF;">Średnia 1 Liga</th>
+                                <th style="background-color: #CA8A04; color: #FFFFFF;">Średnia 1+2L (ur. 2008+)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+        <tr class="category-row">
+            <td colspan="6">GRA W OFENSYWIE I DRYBLING</td>
+        </tr>
+        
+    <tr>
+        <td class="metric-name">Udane akcje ofensywne / 90</td>
+        <td><span >1.44</span></td>
+        <td><span class="badge-top1">2.56</span></td>
+        <td><span >1.70</span></td>
+        <td class="benchmark-col">2.51</td>
+        <td class="benchmark-col">2.83</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Progresywne rajdy / 90</td>
+        <td><span >1.31</span></td>
+        <td><span >1.25</span></td>
+        <td><span class="badge-top1">1.42</span></td>
+        <td class="benchmark-col">1.60</td>
+        <td class="benchmark-col">1.55</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Dryblingi / 90</td>
+        <td><span >1.70</span></td>
+        <td><span >2.16</span></td>
+        <td><span class="badge-top1">2.27</span></td>
+        <td class="benchmark-col">2.48</td>
+        <td class="benchmark-col">2.90</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Udane dryblingi, %</td>
+        <td><span >23.1%</span></td>
+        <td><span class="badge-top1">57.8%</span></td>
+        <td><span >50.0%</span></td>
+        <td class="benchmark-col">50.0%</td>
+        <td class="benchmark-col">44.0%</td>
+    </tr>
+    
+        <tr class="category-row">
+            <td colspan="6">KREACJA I DYSTRYBUCJA</td>
+        </tr>
+        
+    <tr>
+        <td class="metric-name">Podania do przodu / 90</td>
+        <td><span >6.92</span></td>
+        <td><span class="badge-top1">12.91</span></td>
+        <td><span >5.86</span></td>
+        <td class="benchmark-col">8.20</td>
+        <td class="benchmark-col">7.87</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Dokładność podań do przodu, %</td>
+        <td><span class="badge-top1">69.8%</span></td>
+        <td><span >66.3%</span></td>
+        <td><span >56.5%</span></td>
+        <td class="benchmark-col">65.1%</td>
+        <td class="benchmark-col">59.6%</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">xA / 90</td>
+        <td><span class="badge-top1">0.27</span></td>
+        <td><span >0.08</span></td>
+        <td><span >0.08</span></td>
+        <td class="benchmark-col">0.11</td>
+        <td class="benchmark-col">0.13</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Podania prostopadłe / 90</td>
+        <td><span >0.13</span></td>
+        <td><span class="badge-top1">0.61</span></td>
+        <td><span >0.00</span></td>
+        <td class="benchmark-col">0.25</td>
+        <td class="benchmark-col">0.36</td>
+    </tr>
+    
+        <tr class="category-row">
+            <td colspan="6">GRA W DEFENSYWIE</td>
+        </tr>
+        
+    <tr>
+        <td class="metric-name">Pojedynki w defensywie / 90</td>
+        <td><span >6.27</span></td>
+        <td><span class="badge-top1">8.39</span></td>
+        <td><span >5.20</span></td>
+        <td class="benchmark-col">5.23</td>
+        <td class="benchmark-col">7.63</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Wygrane pojedynki w defensywie, %</td>
+        <td><span >56.2%</span></td>
+        <td><span class="badge-top1">64.3%</span></td>
+        <td><span >52.7%</span></td>
+        <td class="benchmark-col">57.5%</td>
+        <td class="benchmark-col">56.6%</td>
+    </tr>
+    
+    <tr>
+        <td class="metric-name">Przejęcia (PAdj) / 90</td>
+        <td><span >4.93</span></td>
+        <td><span class="badge-top1">6.73</span></td>
+        <td><span >4.60</span></td>
+        <td class="benchmark-col">4.32</td>
+        <td class="benchmark-col">3.36</td>
+    </tr>
+    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="padding: 24px;">
+            <h2 style="font-size: 16px; font-weight: 700; margin-top: 0; color: #1E293B;">Podgląd Wygenerowanej Grafiki PNG (300 DPI)</h2>
+            <div class="preview-section">
+                <img src="output_visualizations/tabela_porownawcza_pozycja10.png" alt="Tabela Porównawcza Pozycja 10" class="preview-image">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

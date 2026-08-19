@@ -1,0 +1,3145 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zestawienie Statystyczne Zawodników Zagranicznych — Skrajny Stoper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #111827;
+            padding: 32px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1420px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 16px;
+        }
+
+        .page-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0F172A;
+            letter-spacing: -0.3px;
+        }
+
+        .page-header p {
+            font-size: 13px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+
+        .benchmark-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .bench-card {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .bench-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 6px;
+        }
+
+        .bench-metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 3px 0;
+            color: #475569;
+        }
+
+        .bench-metric strong {
+            color: #0F172A;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #F1F5F9;
+            color: #0F172A;
+        }
+
+        .tab-btn.active {
+            background-color: #1E293B;
+            color: #FFFFFF;
+            border-color: #1E293B;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-card {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+
+        .table-title-bar {
+            padding: 16px 20px;
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title-bar h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .table-title-bar p {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 2px;
+        }
+
+        .data-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12.5px;
+        }
+
+        .data-table th {
+            background-color: #1E293B;
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 11px 12px;
+            font-size: 11.5px;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+
+        .data-table th:first-child {
+            text-align: left;
+            padding-left: 20px;
+            width: 26%;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #E2E8F0;
+            color: #111827;
+            word-wrap: break-word;
+        }
+
+        .data-table td:first-child {
+            text-align: left;
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+
+        .category-row td {
+            background-color: #F1F5F9 !important;
+            color: #334155;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-align: left;
+            padding: 8px 20px;
+            border-bottom: 1px solid #CBD5E1;
+        }
+
+        .benchmark-row td {
+            background-color: #E2E8F0 !important;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .top3-highlight {
+            background-color: #DCFCE7 !important;
+            color: #15803D !important;
+            font-weight: 700 !important;
+        }
+
+        .top1-highlight {
+            background-color: #BBF7D0 !important;
+            color: #166534 !important;
+            font-weight: 700 !important;
+        }
+
+        .delta {
+            font-weight: 600;
+        }
+
+        .delta.pos {
+            color: #15803D;
+        }
+
+        .delta.neg {
+            color: #B91C1C;
+        }
+
+        .target-val {
+            font-weight: 700;
+        }
+
+        .download-bar {
+            padding: 12px 20px;
+            background-color: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background-color: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #1E293B;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .btn-download:hover {
+            background-color: #1E293B;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>ZESTAWIENIE STATYSTYCZNE ZAWODNIKÓW ZAGRANICZNYCH — SKRAJNY STOPER</h1>
+            <p>Porównanie surowych danych 19 zawodników z pliku zagranica.xlsx vs Średnia Grupy, Średnia 1. Ligi (Skrajny stoper) oraz Średnia Warta Poznań</p>
+        </div>
+
+        <div class="benchmark-summary">
+            <div class="bench-card">
+                <h3>ŚREDNIA GRUPA ZAGRANICA (19 ZAW.)</h3>
+                <div class="bench-metric"><span>Pojedynki defensywne / 90:</span> <strong>5.75 (68.6%)</strong></div>
+                <div class="bench-metric"><span>Pojedynki w powietrzu / 90:</span> <strong>4.17 (54.2%)</strong></div>
+                <div class="bench-metric"><span>Podania do przodu / 90:</span> <strong>16.98 (70.3%)</strong></div>
+                <div class="bench-metric"><span>Dośrodkowania / 90:</span> <strong>0.46 (27.4%)</strong></div>
+            </div>
+            <div class="bench-card">
+                <h3>ŚREDNIA 1 LIGA (SKRAJNY STOPER)</h3>
+                <div class="bench-metric"><span>Pojedynki defensywne / 90:</span> <strong>5.32 (62.5%)</strong></div>
+                <div class="bench-metric"><span>Pojedynki w powietrzu / 90:</span> <strong>3.61 (50.7%)</strong></div>
+                <div class="bench-metric"><span>Podania do przodu / 90:</span> <strong>15.13 (70.9%)</strong></div>
+                <div class="bench-metric"><span>Dośrodkowania / 90:</span> <strong>1.50 (31.6%)</strong></div>
+            </div>
+            <div class="bench-card">
+                <h3>ŚREDNIA WARTA POZNAŃ (SKRAJNY STOPER)</h3>
+                <div class="bench-metric"><span>Pojedynki defensywne / 90:</span> <strong>7.63 (63.0%)</strong></div>
+                <div class="bench-metric"><span>Pojedynki w powietrzu / 90:</span> <strong>4.68 (51.0%)</strong></div>
+                <div class="bench-metric"><span>Podania do przodu / 90:</span> <strong>14.86 (67.0%)</strong></div>
+                <div class="bench-metric"><span>Dośrodkowania / 90:</span> <strong>1.19 (54.9%)</strong></div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">0A. ZESTAWIENIE ZBIORCZE</button>
+            <button class="tab-btn" onclick="switchTab(99)">0B. ZESTAWIENIE (TOP 3 PER STATYSTYKA)</button>
+<button class="tab-btn" onclick="switchTab(1)">1. W. Kooy</button>
+<button class="tab-btn" onclick="switchTab(2)">2. M. Šuver</button>
+<button class="tab-btn" onclick="switchTab(3)">3. S. Aigner</button>
+<button class="tab-btn" onclick="switchTab(4)">4. M. Rodin</button>
+<button class="tab-btn" onclick="switchTab(5)">5. T. Kok</button>
+<button class="tab-btn" onclick="switchTab(6)">6. M. Untergrabner</button>
+<button class="tab-btn" onclick="switchTab(7)">7. A. Bol</button>
+<button class="tab-btn" onclick="switchTab(8)">8. B. Cipetić</button>
+<button class="tab-btn" onclick="switchTab(9)">9. M. Pourzitidis</button>
+<button class="tab-btn" onclick="switchTab(10)">10. A. Foah-Sam</button>
+<button class="tab-btn" onclick="switchTab(11)">11. D. Balodis</button>
+<button class="tab-btn" onclick="switchTab(12)">12. K. Nowak</button>
+<button class="tab-btn" onclick="switchTab(13)">13. A. Jovičić</button>
+<button class="tab-btn" onclick="switchTab(14)">14. B. Kopacz</button>
+<button class="tab-btn" onclick="switchTab(15)">15. B. Batar</button>
+<button class="tab-btn" onclick="switchTab(16)">16. N. Vujčić</button>
+<button class="tab-btn" onclick="switchTab(17)">17. D. Fišl</button>
+<button class="tab-btn" onclick="switchTab(18)">18. D. Stăiculescu</button>
+<button class="tab-btn" onclick="switchTab(19)">19. M. Sawicki</button>
+
+        </div>
+
+        <!-- TAB 0A: SUMMARY TABLE -->
+        <div id="tab-0" class="tab-content active">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>ZESTAWIENIE ZBIORCZE ALL 19 ZAWODNIKÓW — SKRAJNY STOPER</h2>
+                        <p>Zestawienie surowych parametrów statystycznych na tle benchmarków</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 14%;">Zawodnik</th>
+                            <th style="width: 12%;">Klub</th>
+                            <th style="width: 6%;">Minuty</th>
+                            <th>Poj. Def /90</th>
+                            <th>Wygr. Def %</th>
+                            <th>Poj. Pow /90</th>
+                            <th>Wygr. Pow %</th>
+                            <th>Pod. przód /90</th>
+                            <th>Dokł. przód %</th>
+                            <th>Dośrodk. /90</th>
+                            <th>Dokł. dośr %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+    <tr>
+        <td class="target-val">W. Kooy</td>
+        <td>-</td>
+        <td>2784</td>
+        <td>5.59</td>
+        <td>66.5%</td>
+        <td>5.11</td>
+        <td>50.6%</td>
+        <td>19.43</td>
+        <td>78.0%</td>
+        <td>0.19</td>
+        <td>16.7%</td>
+    </tr>
+    <tr>
+        <td class="target-val">M. Šuver</td>
+        <td>Skalica</td>
+        <td>2567</td>
+        <td>5.05</td>
+        <td>75.7%</td>
+        <td>5.57</td>
+        <td>51.6%</td>
+        <td>15.08</td>
+        <td>73.3%</td>
+        <td>0.04</td>
+        <td>100.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">S. Aigner</td>
+        <td>Austria Salzburg</td>
+        <td>2554</td>
+        <td>7.86</td>
+        <td>76.7%</td>
+        <td>4.90</td>
+        <td>61.9%</td>
+        <td>15.22</td>
+        <td>72.0%</td>
+        <td>0.00</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">M. Rodin</td>
+        <td>-</td>
+        <td>2519</td>
+        <td>3.39</td>
+        <td>65.3%</td>
+        <td>7.18</td>
+        <td>49.8%</td>
+        <td>15.79</td>
+        <td>77.2%</td>
+        <td>0.07</td>
+        <td>50.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">T. Kok</td>
+        <td>De Graafschap</td>
+        <td>2444</td>
+        <td>4.57</td>
+        <td>74.2%</td>
+        <td>4.86</td>
+        <td>54.5%</td>
+        <td>19.30</td>
+        <td>77.3%</td>
+        <td>0.15</td>
+        <td>25.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">M. Untergrabner</td>
+        <td>-</td>
+        <td>2207</td>
+        <td>6.08</td>
+        <td>67.1%</td>
+        <td>4.57</td>
+        <td>59.8%</td>
+        <td>27.85</td>
+        <td>62.2%</td>
+        <td>0.86</td>
+        <td>42.9%</td>
+    </tr>
+    <tr>
+        <td class="target-val">A. Bol</td>
+        <td>-</td>
+        <td>2000</td>
+        <td>4.86</td>
+        <td>68.5%</td>
+        <td>3.15</td>
+        <td>50.0%</td>
+        <td>21.78</td>
+        <td>76.7%</td>
+        <td>0.00</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">B. Cipetić</td>
+        <td>-</td>
+        <td>1891</td>
+        <td>4.43</td>
+        <td>55.9%</td>
+        <td>1.86</td>
+        <td>48.7%</td>
+        <td>16.23</td>
+        <td>69.2%</td>
+        <td>2.67</td>
+        <td>25.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">M. Pourzitidis</td>
+        <td>-</td>
+        <td>1854</td>
+        <td>6.07</td>
+        <td>62.4%</td>
+        <td>3.35</td>
+        <td>50.7%</td>
+        <td>17.52</td>
+        <td>67.3%</td>
+        <td>0.44</td>
+        <td>44.4%</td>
+    </tr>
+    <tr>
+        <td class="target-val">A. Foah-Sam</td>
+        <td>-</td>
+        <td>1762</td>
+        <td>9.91</td>
+        <td>67.5%</td>
+        <td>4.95</td>
+        <td>57.7%</td>
+        <td>14.76</td>
+        <td>62.6%</td>
+        <td>1.12</td>
+        <td>31.8%</td>
+    </tr>
+    <tr>
+        <td class="target-val">D. Balodis</td>
+        <td>-</td>
+        <td>1701</td>
+        <td>4.87</td>
+        <td>72.8%</td>
+        <td>2.54</td>
+        <td>60.4%</td>
+        <td>18.20</td>
+        <td>78.2%</td>
+        <td>0.11</td>
+        <td>50.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">K. Nowak</td>
+        <td>-</td>
+        <td>1577</td>
+        <td>3.71</td>
+        <td>61.5%</td>
+        <td>3.54</td>
+        <td>64.5%</td>
+        <td>15.75</td>
+        <td>69.6%</td>
+        <td>0.06</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">A. Jovičić</td>
+        <td>-</td>
+        <td>1529</td>
+        <td>5.53</td>
+        <td>69.2%</td>
+        <td>6.24</td>
+        <td>51.9%</td>
+        <td>12.95</td>
+        <td>70.0%</td>
+        <td>1.00</td>
+        <td>35.3%</td>
+    </tr>
+    <tr>
+        <td class="target-val">B. Kopacz</td>
+        <td>-</td>
+        <td>1440</td>
+        <td>4.94</td>
+        <td>63.3%</td>
+        <td>4.13</td>
+        <td>62.1%</td>
+        <td>11.63</td>
+        <td>66.1%</td>
+        <td>0.19</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">B. Batar</td>
+        <td>Sloga Doboj</td>
+        <td>1408</td>
+        <td>6.90</td>
+        <td>67.6%</td>
+        <td>3.96</td>
+        <td>61.3%</td>
+        <td>12.98</td>
+        <td>64.0%</td>
+        <td>0.00</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">N. Vujčić</td>
+        <td>-</td>
+        <td>943</td>
+        <td>6.68</td>
+        <td>72.9%</td>
+        <td>1.43</td>
+        <td>46.7%</td>
+        <td>16.32</td>
+        <td>75.4%</td>
+        <td>0.19</td>
+        <td>50.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">D. Fišl</td>
+        <td>Viktoria Žižkov</td>
+        <td>864</td>
+        <td>6.77</td>
+        <td>69.2%</td>
+        <td>3.96</td>
+        <td>50.0%</td>
+        <td>24.79</td>
+        <td>75.2%</td>
+        <td>0.31</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">D. Stăiculescu</td>
+        <td>CSM Satu Mare</td>
+        <td>746</td>
+        <td>5.43</td>
+        <td>68.9%</td>
+        <td>5.79</td>
+        <td>66.7%</td>
+        <td>16.29</td>
+        <td>54.1%</td>
+        <td>0.00</td>
+        <td>0.0%</td>
+    </tr>
+    <tr>
+        <td class="target-val">M. Sawicki</td>
+        <td>-</td>
+        <td>422</td>
+        <td>6.61</td>
+        <td>77.4%</td>
+        <td>2.13</td>
+        <td>30.0%</td>
+        <td>10.66</td>
+        <td>68.0%</td>
+        <td>1.28</td>
+        <td>50.0%</td>
+    </tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA GRUPA ZAGRANICA (19 ZAW.)</td>
+        <td>5.75</td>
+        <td>68.6%</td>
+        <td>4.17</td>
+        <td>54.2%</td>
+        <td>16.98</td>
+        <td>70.3%</td>
+        <td>0.46</td>
+        <td>27.4%</td>
+    </tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA 1 LIGA (SKRAJNY STOPER)</td>
+        <td>5.32</td>
+        <td>62.5%</td>
+        <td>3.61</td>
+        <td>50.7%</td>
+        <td>15.13</td>
+        <td>70.9%</td>
+        <td>1.50</td>
+        <td>31.6%</td>
+    </tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA WARTA POZNAŃ (SKRAJNY STOPER)</td>
+        <td>7.63</td>
+        <td>63.0%</td>
+        <td>4.68</td>
+        <td>51.0%</td>
+        <td>14.86</td>
+        <td>67.0%</td>
+        <td>1.19</td>
+        <td>54.9%</td>
+    </tr>
+
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika zbiorcza do prezentacji:</span>
+                    <a href="zagranica/tabela_zbiorcza_skrajny_stoper.png" target="_blank" class="btn-download">Pobierz Grafika Tabela Zbiorcza (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 0B: TOP 3 PER METRIC HIGHLIGHTED TABLE -->
+        <div id="tab-99" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>ZESTAWIENIE ZBIORCZE — TOP 3 W KAŻDEJ POJEDYNCZEJ STATYSTYCE</h2>
+                        <p>Wyróżnienie na zielono 3 zawodników z najwyższym odchyleniem in plus od średniej w kontekście każdej poszczególnej metryki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 14%;">Zawodnik</th>
+                            <th style="width: 12%;">Klub</th>
+                            <th style="width: 6%;">Minuty</th>
+                            <th>Poj. Def /90</th>
+                            <th>Wygr. Def %</th>
+                            <th>Poj. Pow /90</th>
+                            <th>Wygr. Pow %</th>
+                            <th>Pod. przód /90</th>
+                            <th>Dokł. przód %</th>
+                            <th>Dośrodk. /90</th>
+                            <th>Dokł. dośr %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+    <tr>
+        <td class="target-val">W. Kooy</td>
+        <td>-</td>
+        <td>2784</td><td >5.59</td><td >66.5%</td><td >0.45</td><td >5.11</td><td >50.6%</td><td >19.43</td><td class="top3-highlight">78.0%</td><td >0.19</td><td >16.7%</td></tr>
+    <tr>
+        <td class="target-val">M. Šuver</td>
+        <td>Skalica</td>
+        <td>2567</td><td >5.05</td><td class="top3-highlight">75.7%</td><td >0.95</td><td >5.57</td><td >51.6%</td><td >15.08</td><td >73.3%</td><td >0.04</td><td class="top1-highlight">100.0%</td></tr>
+    <tr>
+        <td class="target-val">S. Aigner</td>
+        <td>Austria Salzburg</td>
+        <td>2554</td><td class="top3-highlight">7.86</td><td class="top3-highlight">76.7%</td><td >0.42</td><td >4.90</td><td >61.9%</td><td >15.22</td><td >72.0%</td><td >0.00</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">M. Rodin</td>
+        <td>-</td>
+        <td>2519</td><td >3.39</td><td >65.3%</td><td >0.79</td><td class="top1-highlight">7.18</td><td >49.8%</td><td >15.79</td><td >77.2%</td><td >0.07</td><td class="top3-highlight">50.0%</td></tr>
+    <tr>
+        <td class="target-val">T. Kok</td>
+        <td>De Graafschap</td>
+        <td>2444</td><td >4.57</td><td >74.2%</td><td class="top3-highlight">1.03</td><td >4.86</td><td >54.5%</td><td >19.30</td><td class="top3-highlight">77.3%</td><td >0.15</td><td >25.0%</td></tr>
+    <tr>
+        <td class="target-val">M. Untergrabner</td>
+        <td>-</td>
+        <td>2207</td><td >6.08</td><td >67.1%</td><td >0.65</td><td >4.57</td><td >59.8%</td><td class="top1-highlight">27.85</td><td >62.2%</td><td >0.86</td><td >42.9%</td></tr>
+    <tr>
+        <td class="target-val">A. Bol</td>
+        <td>-</td>
+        <td>2000</td><td >4.86</td><td >68.5%</td><td class="top1-highlight">1.40</td><td >3.15</td><td >50.0%</td><td class="top3-highlight">21.78</td><td >76.7%</td><td >0.00</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">B. Cipetić</td>
+        <td>-</td>
+        <td>1891</td><td >4.43</td><td >55.9%</td><td >0.43</td><td >1.86</td><td >48.7%</td><td >16.23</td><td >69.2%</td><td class="top1-highlight">2.67</td><td >25.0%</td></tr>
+    <tr>
+        <td class="target-val">M. Pourzitidis</td>
+        <td>-</td>
+        <td>1854</td><td >6.07</td><td >62.4%</td><td >0.49</td><td >3.35</td><td >50.7%</td><td >17.52</td><td >67.3%</td><td >0.44</td><td >44.4%</td></tr>
+    <tr>
+        <td class="target-val">A. Foah-Sam</td>
+        <td>-</td>
+        <td>1762</td><td class="top1-highlight">9.91</td><td >67.5%</td><td >0.36</td><td >4.95</td><td >57.7%</td><td >14.76</td><td >62.6%</td><td class="top3-highlight">1.12</td><td >31.8%</td></tr>
+    <tr>
+        <td class="target-val">D. Balodis</td>
+        <td>-</td>
+        <td>1701</td><td >4.87</td><td >72.8%</td><td >0.26</td><td >2.54</td><td >60.4%</td><td >18.20</td><td class="top1-highlight">78.2%</td><td >0.11</td><td class="top3-highlight">50.0%</td></tr>
+    <tr>
+        <td class="target-val">K. Nowak</td>
+        <td>-</td>
+        <td>1577</td><td >3.71</td><td >61.5%</td><td >0.97</td><td >3.54</td><td class="top3-highlight">64.5%</td><td >15.75</td><td >69.6%</td><td >0.06</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">A. Jovičić</td>
+        <td>-</td>
+        <td>1529</td><td >5.53</td><td >69.2%</td><td >0.35</td><td class="top3-highlight">6.24</td><td >51.9%</td><td >12.95</td><td >70.0%</td><td >1.00</td><td >35.3%</td></tr>
+    <tr>
+        <td class="target-val">B. Kopacz</td>
+        <td>-</td>
+        <td>1440</td><td >4.94</td><td >63.3%</td><td class="top3-highlight">1.13</td><td >4.13</td><td class="top3-highlight">62.1%</td><td >11.63</td><td >66.1%</td><td >0.19</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">B. Batar</td>
+        <td>Sloga Doboj</td>
+        <td>1408</td><td class="top3-highlight">6.90</td><td >67.6%</td><td >0.38</td><td >3.96</td><td >61.3%</td><td >12.98</td><td >64.0%</td><td >0.00</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">N. Vujčić</td>
+        <td>-</td>
+        <td>943</td><td >6.68</td><td >72.9%</td><td >0.19</td><td >1.43</td><td >46.7%</td><td >16.32</td><td >75.4%</td><td >0.19</td><td >50.0%</td></tr>
+    <tr>
+        <td class="target-val">D. Fišl</td>
+        <td>Viktoria Žižkov</td>
+        <td>864</td><td >6.77</td><td >69.2%</td><td >0.63</td><td >3.96</td><td >50.0%</td><td class="top3-highlight">24.79</td><td >75.2%</td><td >0.31</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">D. Stăiculescu</td>
+        <td>CSM Satu Mare</td>
+        <td>746</td><td >5.43</td><td >68.9%</td><td >0.84</td><td class="top3-highlight">5.79</td><td class="top1-highlight">66.7%</td><td >16.29</td><td >54.1%</td><td >0.00</td><td >0.0%</td></tr>
+    <tr>
+        <td class="target-val">M. Sawicki</td>
+        <td>-</td>
+        <td>422</td><td >6.61</td><td class="top1-highlight">77.4%</td><td >0.21</td><td >2.13</td><td >30.0%</td><td >10.66</td><td >68.0%</td><td class="top3-highlight">1.28</td><td >50.0%</td></tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA GRUPA ZAGRANICA (19 ZAW.)</td>
+        <td>5.75</td>
+        <td>68.6%</td>
+        <td>4.17</td>
+        <td>54.2%</td>
+        <td>16.98</td>
+        <td>70.3%</td>
+        <td>0.46</td>
+        <td>27.4%</td>
+    </tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA 1 LIGA (SKRAJNY STOPER)</td>
+        <td>5.32</td>
+        <td>62.5%</td>
+        <td>3.61</td>
+        <td>50.7%</td>
+        <td>15.13</td>
+        <td>70.9%</td>
+        <td>1.50</td>
+        <td>31.6%</td>
+    </tr>
+    <tr class="benchmark-row">
+        <td colspan="3">ŚREDNIA WARTA POZNAŃ (SKRAJNY STOPER)</td>
+        <td>7.63</td>
+        <td>63.0%</td>
+        <td>4.68</td>
+        <td>51.0%</td>
+        <td>14.86</td>
+        <td>67.0%</td>
+        <td>1.19</td>
+        <td>54.9%</td>
+    </tr>
+
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika do prezentacji (Wyróżnienie Top 3 per Statystyka):</span>
+                    <a href="zagranica/tabela_zbiorcza_top3_odchylenie.png" target="_blank" class="btn-download">Pobierz Grafika Tabela Top 3 (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1 -->
+        <div id="tab-1" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>W. KOOY — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 2784 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>W. Kooy</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">5.59</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.16 (-2.8%)</span></td>
+            <td><span class="delta pos">+0.27 (+5.2%)</span></td>
+            <td><span class="delta neg">-2.04 (-26.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">66.5%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-2.1 p.p.</span></td>
+            <td><span class="delta pos">+4.0 p.p.</span></td>
+            <td><span class="delta pos">+3.5 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.45</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.18 (-28.3%)</span></td>
+            <td><span class="delta neg">-0.07 (-13.2%)</span></td>
+            <td><span class="delta pos">+0.17 (+58.8%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">5.11</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+0.94 (+22.6%)</span></td>
+            <td><span class="delta pos">+1.50 (+41.5%)</span></td>
+            <td><span class="delta pos">+0.43 (+9.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">50.6%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-3.5 p.p.</span></td>
+            <td><span class="delta neg">-0.1 p.p.</span></td>
+            <td><span class="delta neg">-0.4 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">19.43</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+2.45 (+14.5%)</span></td>
+            <td><span class="delta pos">+4.30 (+28.4%)</span></td>
+            <td><span class="delta pos">+4.57 (+30.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">78.0%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+7.7 p.p.</span></td>
+            <td><span class="delta pos">+7.1 p.p.</span></td>
+            <td><span class="delta pos">+11.0 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.19</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.27 (-58.4%)</span></td>
+            <td><span class="delta neg">-1.31 (-87.3%)</span></td>
+            <td><span class="delta neg">-1.00 (-84.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">16.7%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-10.8 p.p.</span></td>
+            <td><span class="delta neg">-14.9 p.p.</span></td>
+            <td><span class="delta neg">-38.2 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_01_w_kooy.png" target="_blank" class="btn-download">Pobierz Grafika W. Kooy (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2 -->
+        <div id="tab-2" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>M. ŠUVER — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Skalica | Minuty na boisku: 2567 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>M. Šuver</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">5.05</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.70 (-12.2%)</span></td>
+            <td><span class="delta neg">-0.27 (-5.0%)</span></td>
+            <td><span class="delta neg">-2.58 (-33.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">75.7%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+7.1 p.p.</span></td>
+            <td><span class="delta pos">+13.2 p.p.</span></td>
+            <td><span class="delta pos">+12.7 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.95</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.32 (+51.3%)</span></td>
+            <td><span class="delta pos">+0.43 (+83.2%)</span></td>
+            <td><span class="delta pos">+0.67 (+235.3%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">5.57</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+1.40 (+33.6%)</span></td>
+            <td><span class="delta pos">+1.96 (+54.3%)</span></td>
+            <td><span class="delta pos">+0.89 (+18.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">51.6%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-2.6 p.p.</span></td>
+            <td><span class="delta pos">+0.8 p.p.</span></td>
+            <td><span class="delta pos">+0.5 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">15.08</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-1.90 (-11.2%)</span></td>
+            <td><span class="delta neg">-0.05 (-0.3%)</span></td>
+            <td><span class="delta pos">+0.22 (+1.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">73.3%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+2.9 p.p.</span></td>
+            <td><span class="delta pos">+2.4 p.p.</span></td>
+            <td><span class="delta pos">+6.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.04</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.42 (-91.2%)</span></td>
+            <td><span class="delta neg">-1.46 (-97.3%)</span></td>
+            <td><span class="delta neg">-1.15 (-96.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">100.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+72.6 p.p.</span></td>
+            <td><span class="delta pos">+68.4 p.p.</span></td>
+            <td><span class="delta pos">+45.1 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_02_m_suver.png" target="_blank" class="btn-download">Pobierz Grafika M. Šuver (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3 -->
+        <div id="tab-3" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>S. AIGNER — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Austria Salzburg | Minuty na boisku: 2554 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>S. Aigner</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">7.86</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+2.11 (+36.7%)</span></td>
+            <td><span class="delta pos">+2.54 (+47.9%)</span></td>
+            <td><span class="delta pos">+0.23 (+3.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">76.7%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+8.1 p.p.</span></td>
+            <td><span class="delta pos">+14.2 p.p.</span></td>
+            <td><span class="delta pos">+13.7 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.42</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.21 (-33.1%)</span></td>
+            <td><span class="delta neg">-0.10 (-19.0%)</span></td>
+            <td><span class="delta pos">+0.14 (+48.2%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">4.90</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+0.73 (+17.5%)</span></td>
+            <td><span class="delta pos">+1.29 (+35.7%)</span></td>
+            <td><span class="delta pos">+0.22 (+4.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">61.9%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+7.7 p.p.</span></td>
+            <td><span class="delta pos">+11.1 p.p.</span></td>
+            <td><span class="delta pos">+10.8 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">15.22</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-1.76 (-10.3%)</span></td>
+            <td><span class="delta pos">+0.09 (+0.6%)</span></td>
+            <td><span class="delta pos">+0.36 (+2.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">72.0%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+1.7 p.p.</span></td>
+            <td><span class="delta pos">+1.1 p.p.</span></td>
+            <td><span class="delta pos">+4.9 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.00</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.46 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.50 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.19 (-100.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_03_s_aigner.png" target="_blank" class="btn-download">Pobierz Grafika S. Aigner (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4 -->
+        <div id="tab-4" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>M. RODIN — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 2519 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>M. Rodin</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">3.39</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-2.36 (-41.0%)</span></td>
+            <td><span class="delta neg">-1.93 (-36.2%)</span></td>
+            <td><span class="delta neg">-4.24 (-55.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">65.3%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-3.3 p.p.</span></td>
+            <td><span class="delta pos">+2.8 p.p.</span></td>
+            <td><span class="delta pos">+2.3 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.79</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.16 (+25.8%)</span></td>
+            <td><span class="delta pos">+0.27 (+52.4%)</span></td>
+            <td><span class="delta pos">+0.51 (+178.8%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">7.18</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+3.01 (+72.2%)</span></td>
+            <td><span class="delta pos">+3.57 (+98.9%)</span></td>
+            <td><span class="delta pos">+2.50 (+53.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">49.8%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-4.4 p.p.</span></td>
+            <td><span class="delta neg">-1.0 p.p.</span></td>
+            <td><span class="delta neg">-1.3 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">15.79</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-1.19 (-7.0%)</span></td>
+            <td><span class="delta pos">+0.66 (+4.3%)</span></td>
+            <td><span class="delta pos">+0.93 (+6.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">77.2%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+6.8 p.p.</span></td>
+            <td><span class="delta pos">+6.2 p.p.</span></td>
+            <td><span class="delta pos">+10.1 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.07</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.39 (-84.7%)</span></td>
+            <td><span class="delta neg">-1.43 (-95.3%)</span></td>
+            <td><span class="delta neg">-1.12 (-94.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">50.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+22.6 p.p.</span></td>
+            <td><span class="delta pos">+18.4 p.p.</span></td>
+            <td><span class="delta neg">-4.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_04_m_rodin.png" target="_blank" class="btn-download">Pobierz Grafika M. Rodin (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5 -->
+        <div id="tab-5" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>T. KOK — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: De Graafschap | Minuty na boisku: 2444 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>T. Kok</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">4.57</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-1.18 (-20.5%)</span></td>
+            <td><span class="delta neg">-0.75 (-14.0%)</span></td>
+            <td><span class="delta neg">-3.06 (-40.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">74.2%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+5.6 p.p.</span></td>
+            <td><span class="delta pos">+11.7 p.p.</span></td>
+            <td><span class="delta pos">+11.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">1.03</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.40 (+64.0%)</span></td>
+            <td><span class="delta pos">+0.51 (+98.6%)</span></td>
+            <td><span class="delta pos">+0.75 (+263.5%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">4.86</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+0.69 (+16.6%)</span></td>
+            <td><span class="delta pos">+1.25 (+34.6%)</span></td>
+            <td><span class="delta pos">+0.18 (+3.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">54.5%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+0.4 p.p.</span></td>
+            <td><span class="delta pos">+3.8 p.p.</span></td>
+            <td><span class="delta pos">+3.5 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">19.30</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+2.32 (+13.7%)</span></td>
+            <td><span class="delta pos">+4.17 (+27.5%)</span></td>
+            <td><span class="delta pos">+4.44 (+29.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">77.3%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+7.0 p.p.</span></td>
+            <td><span class="delta pos">+6.4 p.p.</span></td>
+            <td><span class="delta pos">+10.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.15</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.31 (-67.2%)</span></td>
+            <td><span class="delta neg">-1.35 (-90.0%)</span></td>
+            <td><span class="delta neg">-1.04 (-87.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">25.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-2.4 p.p.</span></td>
+            <td><span class="delta neg">-6.6 p.p.</span></td>
+            <td><span class="delta neg">-29.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_05_t_kok.png" target="_blank" class="btn-download">Pobierz Grafika T. Kok (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6 -->
+        <div id="tab-6" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>M. UNTERGRABNER — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 2207 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>M. Untergrabner</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.08</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+0.33 (+5.7%)</span></td>
+            <td><span class="delta pos">+0.76 (+14.4%)</span></td>
+            <td><span class="delta neg">-1.55 (-20.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">67.1%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-1.4 p.p.</span></td>
+            <td><span class="delta pos">+4.6 p.p.</span></td>
+            <td><span class="delta pos">+4.1 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.65</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.02 (+3.5%)</span></td>
+            <td><span class="delta pos">+0.13 (+25.4%)</span></td>
+            <td><span class="delta pos">+0.37 (+129.4%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">4.57</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+0.40 (+9.6%)</span></td>
+            <td><span class="delta pos">+0.96 (+26.6%)</span></td>
+            <td><span class="delta neg">-0.11 (-2.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">59.8%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+5.7 p.p.</span></td>
+            <td><span class="delta pos">+9.1 p.p.</span></td>
+            <td><span class="delta pos">+8.8 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">27.85</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+10.87 (+64.1%)</span></td>
+            <td><span class="delta pos">+12.72 (+84.0%)</span></td>
+            <td><span class="delta pos">+12.99 (+87.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">62.2%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-8.1 p.p.</span></td>
+            <td><span class="delta neg">-8.7 p.p.</span></td>
+            <td><span class="delta neg">-4.8 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.86</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta pos">+0.40 (+88.2%)</span></td>
+            <td><span class="delta neg">-0.64 (-42.6%)</span></td>
+            <td><span class="delta neg">-0.33 (-27.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">42.9%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+15.4 p.p.</span></td>
+            <td><span class="delta pos">+11.3 p.p.</span></td>
+            <td><span class="delta neg">-12.1 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_06_m_untergrabner.png" target="_blank" class="btn-download">Pobierz Grafika M. Untergrabner (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7 -->
+        <div id="tab-7" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>A. BOL — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 2000 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>A. Bol</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">4.86</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.89 (-15.5%)</span></td>
+            <td><span class="delta neg">-0.46 (-8.6%)</span></td>
+            <td><span class="delta neg">-2.77 (-36.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">68.5%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-0.0 p.p.</span></td>
+            <td><span class="delta pos">+6.0 p.p.</span></td>
+            <td><span class="delta pos">+5.5 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">1.40</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.77 (+123.0%)</span></td>
+            <td><span class="delta pos">+0.88 (+170.0%)</span></td>
+            <td><span class="delta pos">+1.12 (+394.1%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">3.15</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-1.02 (-24.5%)</span></td>
+            <td><span class="delta neg">-0.46 (-12.7%)</span></td>
+            <td><span class="delta neg">-1.53 (-32.7%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">50.0%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-4.2 p.p.</span></td>
+            <td><span class="delta neg">-0.7 p.p.</span></td>
+            <td><span class="delta neg">-1.0 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">21.78</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+4.80 (+28.3%)</span></td>
+            <td><span class="delta pos">+6.65 (+43.9%)</span></td>
+            <td><span class="delta pos">+6.92 (+46.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">76.7%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+6.3 p.p.</span></td>
+            <td><span class="delta pos">+5.7 p.p.</span></td>
+            <td><span class="delta pos">+9.6 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.00</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.46 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.50 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.19 (-100.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_07_a_bol.png" target="_blank" class="btn-download">Pobierz Grafika A. Bol (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 8 -->
+        <div id="tab-8" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>B. CIPETIĆ — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1891 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>B. Cipetić</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">4.43</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-1.32 (-23.0%)</span></td>
+            <td><span class="delta neg">-0.89 (-16.7%)</span></td>
+            <td><span class="delta neg">-3.20 (-42.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">55.9%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-12.6 p.p.</span></td>
+            <td><span class="delta neg">-6.6 p.p.</span></td>
+            <td><span class="delta neg">-7.1 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.43</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.20 (-31.5%)</span></td>
+            <td><span class="delta neg">-0.09 (-17.1%)</span></td>
+            <td><span class="delta pos">+0.15 (+51.8%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">1.86</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-2.31 (-55.4%)</span></td>
+            <td><span class="delta neg">-1.75 (-48.5%)</span></td>
+            <td><span class="delta neg">-2.82 (-60.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">48.7%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-5.4 p.p.</span></td>
+            <td><span class="delta neg">-2.0 p.p.</span></td>
+            <td><span class="delta neg">-2.3 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">16.23</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-0.75 (-4.4%)</span></td>
+            <td><span class="delta pos">+1.10 (+7.3%)</span></td>
+            <td><span class="delta pos">+1.37 (+9.2%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">69.2%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-1.1 p.p.</span></td>
+            <td><span class="delta neg">-1.7 p.p.</span></td>
+            <td><span class="delta pos">+2.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">2.67</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta pos">+2.21 (+484.4%)</span></td>
+            <td><span class="delta pos">+1.17 (+78.3%)</span></td>
+            <td><span class="delta pos">+1.48 (+123.7%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">25.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-2.4 p.p.</span></td>
+            <td><span class="delta neg">-6.6 p.p.</span></td>
+            <td><span class="delta neg">-29.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_08_b_cipetic.png" target="_blank" class="btn-download">Pobierz Grafika B. Cipetić (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 9 -->
+        <div id="tab-9" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>M. POURZITIDIS — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1854 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>M. Pourzitidis</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.07</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+0.32 (+5.6%)</span></td>
+            <td><span class="delta pos">+0.75 (+14.2%)</span></td>
+            <td><span class="delta neg">-1.56 (-20.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">62.4%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-6.2 p.p.</span></td>
+            <td><span class="delta neg">-0.1 p.p.</span></td>
+            <td><span class="delta neg">-0.6 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.49</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.14 (-22.0%)</span></td>
+            <td><span class="delta neg">-0.03 (-5.5%)</span></td>
+            <td><span class="delta pos">+0.21 (+72.9%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">3.35</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-0.82 (-19.7%)</span></td>
+            <td><span class="delta neg">-0.26 (-7.2%)</span></td>
+            <td><span class="delta neg">-1.33 (-28.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">50.7%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-3.4 p.p.</span></td>
+            <td><span class="delta neg">-0.0 p.p.</span></td>
+            <td><span class="delta neg">-0.3 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">17.52</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+0.54 (+3.2%)</span></td>
+            <td><span class="delta pos">+2.39 (+15.8%)</span></td>
+            <td><span class="delta pos">+2.66 (+17.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">67.3%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-3.0 p.p.</span></td>
+            <td><span class="delta neg">-3.6 p.p.</span></td>
+            <td><span class="delta pos">+0.3 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.44</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.02 (-3.7%)</span></td>
+            <td><span class="delta neg">-1.06 (-70.6%)</span></td>
+            <td><span class="delta neg">-0.75 (-63.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">44.4%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+17.0 p.p.</span></td>
+            <td><span class="delta pos">+12.8 p.p.</span></td>
+            <td><span class="delta neg">-10.5 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_09_m_pourzitidis.png" target="_blank" class="btn-download">Pobierz Grafika M. Pourzitidis (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 10 -->
+        <div id="tab-10" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>A. FOAH-SAM — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1762 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>A. Foah-Sam</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">9.91</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+4.16 (+72.3%)</span></td>
+            <td><span class="delta pos">+4.59 (+86.4%)</span></td>
+            <td><span class="delta pos">+2.28 (+29.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">67.5%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-1.0 p.p.</span></td>
+            <td><span class="delta pos">+5.1 p.p.</span></td>
+            <td><span class="delta pos">+4.6 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.36</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.27 (-42.7%)</span></td>
+            <td><span class="delta neg">-0.16 (-30.6%)</span></td>
+            <td><span class="delta pos">+0.08 (+27.1%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">4.95</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+0.78 (+18.7%)</span></td>
+            <td><span class="delta pos">+1.34 (+37.1%)</span></td>
+            <td><span class="delta pos">+0.27 (+5.7%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">57.7%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+3.6 p.p.</span></td>
+            <td><span class="delta pos">+7.0 p.p.</span></td>
+            <td><span class="delta pos">+6.7 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">14.76</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-2.22 (-13.0%)</span></td>
+            <td><span class="delta neg">-0.37 (-2.5%)</span></td>
+            <td><span class="delta neg">-0.10 (-0.7%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">62.6%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-7.7 p.p.</span></td>
+            <td><span class="delta neg">-8.3 p.p.</span></td>
+            <td><span class="delta neg">-4.4 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">1.12</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta pos">+0.66 (+145.2%)</span></td>
+            <td><span class="delta neg">-0.38 (-25.2%)</span></td>
+            <td><span class="delta neg">-0.07 (-6.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">31.8%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+4.4 p.p.</span></td>
+            <td><span class="delta pos">+0.2 p.p.</span></td>
+            <td><span class="delta neg">-23.1 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_10_a_foah-sam.png" target="_blank" class="btn-download">Pobierz Grafika A. Foah-Sam (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 11 -->
+        <div id="tab-11" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>D. BALODIS — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1701 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>D. Balodis</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">4.87</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.88 (-15.3%)</span></td>
+            <td><span class="delta neg">-0.45 (-8.4%)</span></td>
+            <td><span class="delta neg">-2.76 (-36.2%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">72.8%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+4.3 p.p.</span></td>
+            <td><span class="delta pos">+10.4 p.p.</span></td>
+            <td><span class="delta pos">+9.9 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.26</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.37 (-58.6%)</span></td>
+            <td><span class="delta neg">-0.26 (-49.9%)</span></td>
+            <td><span class="delta neg">-0.02 (-8.2%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">2.54</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-1.63 (-39.1%)</span></td>
+            <td><span class="delta neg">-1.07 (-29.6%)</span></td>
+            <td><span class="delta neg">-2.14 (-45.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">60.4%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+6.3 p.p.</span></td>
+            <td><span class="delta pos">+9.7 p.p.</span></td>
+            <td><span class="delta pos">+9.4 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">18.20</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+1.22 (+7.2%)</span></td>
+            <td><span class="delta pos">+3.07 (+20.3%)</span></td>
+            <td><span class="delta pos">+3.34 (+22.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">78.2%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+7.9 p.p.</span></td>
+            <td><span class="delta pos">+7.3 p.p.</span></td>
+            <td><span class="delta pos">+11.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.11</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.35 (-75.9%)</span></td>
+            <td><span class="delta neg">-1.39 (-92.7%)</span></td>
+            <td><span class="delta neg">-1.08 (-90.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">50.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+22.6 p.p.</span></td>
+            <td><span class="delta pos">+18.4 p.p.</span></td>
+            <td><span class="delta neg">-4.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_11_d_balodis.png" target="_blank" class="btn-download">Pobierz Grafika D. Balodis (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 12 -->
+        <div id="tab-12" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>K. NOWAK — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1577 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>K. Nowak</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">3.71</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-2.04 (-35.5%)</span></td>
+            <td><span class="delta neg">-1.61 (-30.2%)</span></td>
+            <td><span class="delta neg">-3.92 (-51.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">61.5%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-7.0 p.p.</span></td>
+            <td><span class="delta neg">-0.9 p.p.</span></td>
+            <td><span class="delta neg">-1.4 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.97</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.34 (+54.5%)</span></td>
+            <td><span class="delta pos">+0.45 (+87.1%)</span></td>
+            <td><span class="delta pos">+0.69 (+242.4%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">3.54</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-0.63 (-15.1%)</span></td>
+            <td><span class="delta neg">-0.07 (-1.9%)</span></td>
+            <td><span class="delta neg">-1.14 (-24.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">64.5%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+10.4 p.p.</span></td>
+            <td><span class="delta pos">+13.8 p.p.</span></td>
+            <td><span class="delta pos">+13.5 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">15.75</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-1.23 (-7.2%)</span></td>
+            <td><span class="delta pos">+0.62 (+4.1%)</span></td>
+            <td><span class="delta pos">+0.89 (+6.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">69.6%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-0.8 p.p.</span></td>
+            <td><span class="delta neg">-1.3 p.p.</span></td>
+            <td><span class="delta pos">+2.5 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.06</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.40 (-86.9%)</span></td>
+            <td><span class="delta neg">-1.44 (-96.0%)</span></td>
+            <td><span class="delta neg">-1.13 (-95.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_12_k_nowak.png" target="_blank" class="btn-download">Pobierz Grafika K. Nowak (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 13 -->
+        <div id="tab-13" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>A. JOVIČIĆ — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1529 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>A. Jovičić</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">5.53</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.22 (-3.8%)</span></td>
+            <td><span class="delta pos">+0.21 (+4.0%)</span></td>
+            <td><span class="delta neg">-2.10 (-27.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">69.2%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+0.6 p.p.</span></td>
+            <td><span class="delta pos">+6.7 p.p.</span></td>
+            <td><span class="delta pos">+6.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.35</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.28 (-44.3%)</span></td>
+            <td><span class="delta neg">-0.17 (-32.5%)</span></td>
+            <td><span class="delta pos">+0.07 (+23.5%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">6.24</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+2.07 (+49.7%)</span></td>
+            <td><span class="delta pos">+2.63 (+72.8%)</span></td>
+            <td><span class="delta pos">+1.56 (+33.2%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">51.9%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-2.3 p.p.</span></td>
+            <td><span class="delta pos">+1.2 p.p.</span></td>
+            <td><span class="delta pos">+0.9 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">12.95</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-4.03 (-23.7%)</span></td>
+            <td><span class="delta neg">-2.18 (-14.4%)</span></td>
+            <td><span class="delta neg">-1.91 (-12.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">70.0%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-0.3 p.p.</span></td>
+            <td><span class="delta neg">-0.9 p.p.</span></td>
+            <td><span class="delta pos">+3.0 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">1.00</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta pos">+0.54 (+118.9%)</span></td>
+            <td><span class="delta neg">-0.50 (-33.2%)</span></td>
+            <td><span class="delta neg">-0.19 (-16.2%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">35.3%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+7.9 p.p.</span></td>
+            <td><span class="delta pos">+3.7 p.p.</span></td>
+            <td><span class="delta neg">-19.6 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_13_a_jovicic.png" target="_blank" class="btn-download">Pobierz Grafika A. Jovičić (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 14 -->
+        <div id="tab-14" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>B. KOPACZ — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 1440 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>B. Kopacz</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">4.94</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.81 (-14.1%)</span></td>
+            <td><span class="delta neg">-0.38 (-7.1%)</span></td>
+            <td><span class="delta neg">-2.69 (-35.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">63.3%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-5.3 p.p.</span></td>
+            <td><span class="delta pos">+0.8 p.p.</span></td>
+            <td><span class="delta pos">+0.3 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">1.13</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.50 (+80.0%)</span></td>
+            <td><span class="delta pos">+0.61 (+117.9%)</span></td>
+            <td><span class="delta pos">+0.85 (+298.8%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">4.13</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-0.04 (-0.9%)</span></td>
+            <td><span class="delta pos">+0.52 (+14.4%)</span></td>
+            <td><span class="delta neg">-0.55 (-11.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">62.1%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+8.0 p.p.</span></td>
+            <td><span class="delta pos">+11.4 p.p.</span></td>
+            <td><span class="delta pos">+11.1 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">11.63</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-5.35 (-31.5%)</span></td>
+            <td><span class="delta neg">-3.50 (-23.1%)</span></td>
+            <td><span class="delta neg">-3.23 (-21.7%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">66.1%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-4.2 p.p.</span></td>
+            <td><span class="delta neg">-4.8 p.p.</span></td>
+            <td><span class="delta neg">-0.9 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.19</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.27 (-58.4%)</span></td>
+            <td><span class="delta neg">-1.31 (-87.3%)</span></td>
+            <td><span class="delta neg">-1.00 (-84.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_14_b_kopacz.png" target="_blank" class="btn-download">Pobierz Grafika B. Kopacz (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 15 -->
+        <div id="tab-15" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>B. BATAR — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Sloga Doboj | Minuty na boisku: 1408 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>B. Batar</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.90</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+1.15 (+20.0%)</span></td>
+            <td><span class="delta pos">+1.58 (+29.8%)</span></td>
+            <td><span class="delta neg">-0.73 (-9.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">67.6%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta neg">-1.0 p.p.</span></td>
+            <td><span class="delta pos">+5.1 p.p.</span></td>
+            <td><span class="delta pos">+4.6 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.38</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.25 (-39.5%)</span></td>
+            <td><span class="delta neg">-0.14 (-26.7%)</span></td>
+            <td><span class="delta pos">+0.10 (+34.1%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">3.96</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-0.21 (-5.0%)</span></td>
+            <td><span class="delta pos">+0.35 (+9.7%)</span></td>
+            <td><span class="delta neg">-0.72 (-15.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">61.3%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+7.1 p.p.</span></td>
+            <td><span class="delta pos">+10.6 p.p.</span></td>
+            <td><span class="delta pos">+10.3 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">12.98</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-4.00 (-23.5%)</span></td>
+            <td><span class="delta neg">-2.15 (-14.2%)</span></td>
+            <td><span class="delta neg">-1.88 (-12.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">64.0%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-6.3 p.p.</span></td>
+            <td><span class="delta neg">-6.9 p.p.</span></td>
+            <td><span class="delta neg">-3.0 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.00</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.46 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.50 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.19 (-100.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_15_b_batar.png" target="_blank" class="btn-download">Pobierz Grafika B. Batar (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 16 -->
+        <div id="tab-16" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>N. VUJČIĆ — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 943 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>N. Vujčić</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.68</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+0.93 (+16.2%)</span></td>
+            <td><span class="delta pos">+1.36 (+25.7%)</span></td>
+            <td><span class="delta neg">-0.95 (-12.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">72.9%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+4.3 p.p.</span></td>
+            <td><span class="delta pos">+10.4 p.p.</span></td>
+            <td><span class="delta pos">+9.9 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.19</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.44 (-69.7%)</span></td>
+            <td><span class="delta neg">-0.33 (-63.4%)</span></td>
+            <td><span class="delta neg">-0.09 (-32.9%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">1.43</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-2.74 (-65.7%)</span></td>
+            <td><span class="delta neg">-2.18 (-60.4%)</span></td>
+            <td><span class="delta neg">-3.25 (-69.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">46.7%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-7.5 p.p.</span></td>
+            <td><span class="delta neg">-4.1 p.p.</span></td>
+            <td><span class="delta neg">-4.4 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">16.32</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-0.66 (-3.9%)</span></td>
+            <td><span class="delta pos">+1.19 (+7.9%)</span></td>
+            <td><span class="delta pos">+1.46 (+9.8%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">75.4%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+5.1 p.p.</span></td>
+            <td><span class="delta pos">+4.5 p.p.</span></td>
+            <td><span class="delta pos">+8.4 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.19</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.27 (-58.4%)</span></td>
+            <td><span class="delta neg">-1.31 (-87.3%)</span></td>
+            <td><span class="delta neg">-1.00 (-84.1%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">50.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+22.6 p.p.</span></td>
+            <td><span class="delta pos">+18.4 p.p.</span></td>
+            <td><span class="delta neg">-4.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_16_n_vujcic.png" target="_blank" class="btn-download">Pobierz Grafika N. Vujčić (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 17 -->
+        <div id="tab-17" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>D. FIŠL — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Viktoria Žižkov | Minuty na boisku: 864 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>D. Fišl</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.77</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+1.02 (+17.7%)</span></td>
+            <td><span class="delta pos">+1.45 (+27.4%)</span></td>
+            <td><span class="delta neg">-0.86 (-11.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">69.2%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+0.7 p.p.</span></td>
+            <td><span class="delta pos">+6.8 p.p.</span></td>
+            <td><span class="delta pos">+6.3 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.63</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.00 (+0.3%)</span></td>
+            <td><span class="delta pos">+0.11 (+21.5%)</span></td>
+            <td><span class="delta pos">+0.35 (+122.4%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">3.96</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-0.21 (-5.0%)</span></td>
+            <td><span class="delta pos">+0.35 (+9.7%)</span></td>
+            <td><span class="delta neg">-0.72 (-15.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">50.0%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-4.2 p.p.</span></td>
+            <td><span class="delta neg">-0.7 p.p.</span></td>
+            <td><span class="delta neg">-1.0 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">24.79</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta pos">+7.81 (+46.0%)</span></td>
+            <td><span class="delta pos">+9.66 (+63.8%)</span></td>
+            <td><span class="delta pos">+9.93 (+66.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">75.2%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta pos">+4.9 p.p.</span></td>
+            <td><span class="delta pos">+4.3 p.p.</span></td>
+            <td><span class="delta pos">+8.2 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.31</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.15 (-32.1%)</span></td>
+            <td><span class="delta neg">-1.19 (-79.3%)</span></td>
+            <td><span class="delta neg">-0.88 (-74.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_17_d_fisl.png" target="_blank" class="btn-download">Pobierz Grafika D. Fišl (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 18 -->
+        <div id="tab-18" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>D. STĂICULESCU — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: CSM Satu Mare | Minuty na boisku: 746 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>D. Stăiculescu</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">5.43</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta neg">-0.32 (-5.6%)</span></td>
+            <td><span class="delta pos">+0.11 (+2.1%)</span></td>
+            <td><span class="delta neg">-2.20 (-28.9%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">68.9%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+0.3 p.p.</span></td>
+            <td><span class="delta pos">+6.4 p.p.</span></td>
+            <td><span class="delta pos">+5.9 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.84</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta pos">+0.21 (+33.8%)</span></td>
+            <td><span class="delta pos">+0.32 (+62.0%)</span></td>
+            <td><span class="delta pos">+0.56 (+196.5%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">5.79</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta pos">+1.62 (+38.9%)</span></td>
+            <td><span class="delta pos">+2.18 (+60.4%)</span></td>
+            <td><span class="delta pos">+1.11 (+23.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">66.7%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta pos">+12.5 p.p.</span></td>
+            <td><span class="delta pos">+15.9 p.p.</span></td>
+            <td><span class="delta pos">+15.6 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">16.29</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-0.69 (-4.0%)</span></td>
+            <td><span class="delta pos">+1.16 (+7.7%)</span></td>
+            <td><span class="delta pos">+1.43 (+9.6%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">54.1%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-16.3 p.p.</span></td>
+            <td><span class="delta neg">-16.8 p.p.</span></td>
+            <td><span class="delta neg">-13.0 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">0.00</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta neg">-0.46 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.50 (-100.0%)</span></td>
+            <td><span class="delta neg">-1.19 (-100.0%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">0.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta neg">-27.4 p.p.</span></td>
+            <td><span class="delta neg">-31.6 p.p.</span></td>
+            <td><span class="delta neg">-54.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_18_d_staiculescu.png" target="_blank" class="btn-download">Pobierz Grafika D. Stăiculescu (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 19 -->
+        <div id="tab-19" class="tab-content">
+            <div class="table-card">
+                <div class="table-title-bar">
+                    <div>
+                        <h2>M. SAWICKI — PORÓWNANIE POZYCYJNE (SKRAJNY STOPER)</h2>
+                        <p>Klub: Wolny zawodnik / Inny klub | Minuty na boisku: 422 | Raw Data vs Benchmarki</p>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>M. Sawicki</th>
+                            <th>Średnia Grupa</th>
+                            <th>Średnia 1 Liga</th>
+                            <th>Średnia Warta</th>
+                            <th>vs Grupa</th>
+                            <th>vs 1 Liga</th>
+                            <th>vs Warta Poznań</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="category-row"><td colspan="8">GRA W DEFENSYWIE</td></tr>
+        <tr>
+            <td>Pojedynki w defensywie / 90</td>
+            <td class="target-val">6.61</td>
+            <td>5.75</td>
+            <td>5.32</td>
+            <td>7.63</td>
+            <td><span class="delta pos">+0.86 (+15.0%)</span></td>
+            <td><span class="delta pos">+1.29 (+24.3%)</span></td>
+            <td><span class="delta neg">-1.02 (-13.4%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w defensywie</td>
+            <td class="target-val">77.4%</td>
+            <td>68.6%</td>
+            <td>62.5%</td>
+            <td>63.0%</td>
+            <td><span class="delta pos">+8.9 p.p.</span></td>
+            <td><span class="delta pos">+14.9 p.p.</span></td>
+            <td><span class="delta pos">+14.4 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Zablokowane strzały / 90</td>
+            <td class="target-val">0.21</td>
+            <td>0.63</td>
+            <td>0.52</td>
+            <td>0.28</td>
+            <td><span class="delta neg">-0.42 (-66.6%)</span></td>
+            <td><span class="delta neg">-0.31 (-59.5%)</span></td>
+            <td><span class="delta neg">-0.07 (-25.9%)</span></td>
+        </tr><tr class="category-row"><td colspan="8">GRA W POWIETRZU</td></tr>
+        <tr>
+            <td>Pojedynki w powietrzu / 90</td>
+            <td class="target-val">2.13</td>
+            <td>4.17</td>
+            <td>3.61</td>
+            <td>4.68</td>
+            <td><span class="delta neg">-2.04 (-48.9%)</span></td>
+            <td><span class="delta neg">-1.48 (-41.0%)</span></td>
+            <td><span class="delta neg">-2.55 (-54.5%)</span></td>
+        </tr>
+        <tr>
+            <td>Wygrane pojedynki w powietrzu</td>
+            <td class="target-val">30.0%</td>
+            <td>54.2%</td>
+            <td>50.7%</td>
+            <td>51.0%</td>
+            <td><span class="delta neg">-24.2 p.p.</span></td>
+            <td><span class="delta neg">-20.7 p.p.</span></td>
+            <td><span class="delta neg">-21.0 p.p.</span></td>
+        </tr><tr class="category-row"><td colspan="8">DYSTRYBUCJA I ROZGRYWANIE</td></tr>
+        <tr>
+            <td>Podania do przodu / 90</td>
+            <td class="target-val">10.66</td>
+            <td>16.98</td>
+            <td>15.13</td>
+            <td>14.86</td>
+            <td><span class="delta neg">-6.32 (-37.2%)</span></td>
+            <td><span class="delta neg">-4.47 (-29.6%)</span></td>
+            <td><span class="delta neg">-4.20 (-28.2%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność podań do przodu</td>
+            <td class="target-val">68.0%</td>
+            <td>70.3%</td>
+            <td>70.9%</td>
+            <td>67.0%</td>
+            <td><span class="delta neg">-2.3 p.p.</span></td>
+            <td><span class="delta neg">-2.9 p.p.</span></td>
+            <td><span class="delta pos">+1.0 p.p.</span></td>
+        </tr>
+        <tr>
+            <td>Dośrodkowania / 90</td>
+            <td class="target-val">1.28</td>
+            <td>0.46</td>
+            <td>1.50</td>
+            <td>1.19</td>
+            <td><span class="delta pos">+0.82 (+180.2%)</span></td>
+            <td><span class="delta neg">-0.22 (-14.5%)</span></td>
+            <td><span class="delta pos">+0.09 (+7.3%)</span></td>
+        </tr>
+        <tr>
+            <td>Dokładność dośrodkowań</td>
+            <td class="target-val">50.0%</td>
+            <td>27.4%</td>
+            <td>31.6%</td>
+            <td>54.9%</td>
+            <td><span class="delta pos">+22.6 p.p.</span></td>
+            <td><span class="delta pos">+18.4 p.p.</span></td>
+            <td><span class="delta neg">-4.9 p.p.</span></td>
+        </tr>
+                    </tbody>
+                </table>
+                <div class="download-bar">
+                    <span>Grafika indywidualna do prezentacji:</span>
+                    <a href="zagranica/tabela_19_m_sawicki.png" target="_blank" class="btn-download">Pobierz Grafika M. Sawicki (PNG)</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabNum) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabNum === 0) {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('tab-0').classList.add('active');
+            } else if (tabNum === 99) {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('tab-99').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[tabNum + 1].classList.add('active');
+                document.getElementById('tab-' + tabNum).classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

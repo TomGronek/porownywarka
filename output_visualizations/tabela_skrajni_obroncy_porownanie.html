@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zestawienie Porównawcze Skrajnych Obrońców — 9 Metryk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #111827;
+            padding: 32px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: none;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #1E293B;
+            color: #FFFFFF;
+            padding: 24px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .card-subtitle {
+            font-size: 13.5px;
+            color: #94A3B8;
+            margin-top: 6px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+        .data-table th {
+            background-color: #0F172A;
+            color: #FFFFFF;
+            padding: 14px 16px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            border: none;
+        }
+        .data-table th.solid-yellow-col {
+            background-color: #FDE047;
+            color: #1E293B;
+            font-weight: 700;
+        }
+        .data-table th:not(:first-child), .data-table td:not(:first-child) {
+            text-align: center;
+        }
+        .category-row td {
+            background-color: #F1F5F9;
+            color: #334155;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            padding: 10px 16px;
+            border: none;
+        }
+        .category-row td.solid-yellow-col {
+            background-color: #FDE047;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+        .data-table td {
+            padding: 12px 16px;
+            border: none;
+        }
+        .top1-cell {
+            background-color: #BBF7D0 !important;
+            color: #15803D !important;
+            font-weight: 700 !important;
+        }
+        .solid-yellow-col {
+            background-color: #FDE047 !important;
+            font-weight: 700 !important;
+            color: #1E293B !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Zestawienie Porównawcze Skrajnych Obrońców — 9 Metryk</h1>
+                <p class="card-subtitle">Surowe dane statystyczne zawodników na pozycji skrajnego obrońcy / wahadłowego vs Średnia 1. Ligi</p>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metryka Statystyczna</th>
+                            <th>Szymon Karasiński<br>(Ruch Chorzów)</th>
+                            <th>Oleksandr Azatsky<br>(Polonia Bytom)</th>
+                            <th>Paweł Tupaj<br>(Chrobry Głogów)</th>
+                            <th>Daniel Mikołajewski<br>(Wieczysta Kraków)</th>
+                            <th class="solid-yellow-col">Średnia 1 Ligi<br>(Skrajny obrońca)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="category-row">
+                            <td colspan="5">GRA W DEFENSYWIE</td>
+                            <td class="solid-yellow-col"></td>
+                        </tr>
+                        <tr>
+                            <td>Pojedynki w defensywie / 90</td>
+                            <td>4.72</td>
+                            <td>4.01</td>
+                            <td class="top1-cell">6.95</td>
+                            <td>5.22</td>
+                            <td class="solid-yellow-col">5.32</td>
+                        </tr>
+                        <tr>
+                            <td>Wygrane pojedynki w defensywie</td>
+                            <td>67.1%</td>
+                            <td>70.5%</td>
+                            <td>52.5%</td>
+                            <td class="top1-cell">73.1%</td>
+                            <td class="solid-yellow-col">62.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Zablokowane strzały / 90</td>
+                            <td>0.23</td>
+                            <td>0.67</td>
+                            <td>0.44</td>
+                            <td class="top1-cell">0.87</td>
+                            <td class="solid-yellow-col">0.52</td>
+                        </tr>
+
+                        <tr class="category-row">
+                            <td colspan="5">GRA W POWIETRZU</td>
+                            <td class="solid-yellow-col"></td>
+                        </tr>
+                        <tr>
+                            <td>Pojedynki w powietrzu / 90</td>
+                            <td>2.19</td>
+                            <td class="top1-cell">7.09</td>
+                            <td>2.56</td>
+                            <td>4.15</td>
+                            <td class="solid-yellow-col">3.61</td>
+                        </tr>
+                        <tr>
+                            <td>Wygrane pojedynki w powietrzu</td>
+                            <td>55.3%</td>
+                            <td class="top1-cell">66.7%</td>
+                            <td>55.8%</td>
+                            <td>59.7%</td>
+                            <td class="solid-yellow-col">50.7%</td>
+                        </tr>
+
+                        <tr class="category-row">
+                            <td colspan="5">DYSTRYBUCJA I DOŚRODKOWANIA</td>
+                            <td class="solid-yellow-col"></td>
+                        </tr>
+                        <tr>
+                            <td>Podania do przodu / 90</td>
+                            <td>15.10</td>
+                            <td>17.26</td>
+                            <td>16.92</td>
+                            <td class="top1-cell">20.22</td>
+                            <td class="solid-yellow-col">15.13</td>
+                        </tr>
+                        <tr>
+                            <td>Dokładność podań do przodu</td>
+                            <td>63.7%</td>
+                            <td>77.1%</td>
+                            <td class="top1-cell">78.7%</td>
+                            <td>77.5%</td>
+                            <td class="solid-yellow-col">70.9%</td>
+                        </tr>
+                        <tr>
+                            <td>Dośrodkowania / 90</td>
+                            <td class="top1-cell">2.36</td>
+                            <td>0.26</td>
+                            <td>2.02</td>
+                            <td>0.27</td>
+                            <td class="solid-yellow-col">1.50</td>
+                        </tr>
+                        <tr>
+                            <td>Dokładność dośrodkowań</td>
+                            <td>26.8%</td>
+                            <td>40.0%</td>
+                            <td class="top1-cell">51.2%</td>
+                            <td>0.0%</td>
+                            <td class="solid-yellow-col">31.6%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
